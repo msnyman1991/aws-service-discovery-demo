@@ -1,51 +1,41 @@
 variable "family" {
-  type = string
+  type    = string
+  default = "hello-world-family"
 }
 
-variable "container_definition" {
+variable "vpc_id" {
   type    = string
   default = ""
 }
 
-variable "vpc_id" {
-  type = string
-}
-
 variable "ingress_cidr_blocks" {
   type    = list(string)
-  default = []
+  default = ["0.0.0.0/0"]
 }
 
 variable "subnet_ids" {
-  type = list(string)
+  type    = list(string)
+  default = [""]
 }
 
 variable "ecs_service_name" {
-  type = string
+  type    = string
+  default = "hello-world"
 }
 
 variable "service_name" {
-  type = string
+  type    = string
+  default = "hello-world"
 }
 
 variable "domain_name" {
-  type = string
-}
-
-variable "ttl" {
-  type = string
-}
-
-variable "type" {
-  type = string
-}
-
-variable "routing_policy" {
-  type = string
+  type    = string
+  default = "hello-world"
 }
 
 variable "instance_dns" {
-  type = string
+  type    = string
+  default = "hello-world"
 }
 
 variable "desired_count" {
@@ -54,5 +44,6 @@ variable "desired_count" {
 }
 
 variable "cluster_cloud_watch_log_group_name" {
-  type = string
+  type    = string
+  default = "hello-world-log-group"
 }

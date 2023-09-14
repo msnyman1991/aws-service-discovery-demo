@@ -52,10 +52,6 @@ data "aws_iam_policy_document" "execution_role_inline_policy" {
       "logs:CreateLogStream",
       "logs:PutLogEvents",
       "logs:CreateLogGroup",
-      "ssm:DescribeParameters",
-      "ssm:GetParameters",
-      "secretsmanager:DescribeSecret",
-      "secretsmanager:GetSecretValue",
       "kms:Decrypt"
     ]
 
@@ -81,10 +77,6 @@ data "aws_iam_policy_document" "task_role_assume_policy" {
 data "aws_iam_policy_document" "task_role_inline_policy" {
   statement {
     actions = [
-      "ssm:DescribeParameters",
-      "ssm:GetParameters",
-      "secretsmanager:DescribeSecret",
-      "secretsmanager:GetSecretValue",
       "kms:Decrypt"
     ]
 
@@ -124,7 +116,26 @@ resource "aws_ecs_task_definition" "this" {
   execution_role_arn       = aws_iam_role.execution_role.arn
   task_role_arn            = aws_iam_role.task_role.arn
   requires_compatibilities = ["FARGATE"]
-  container_definitions    = var.container_definition
+  container_definitions = jsonencode([
+    {
+      name                   = "hello-world"
+      image                  = "" # Replace with Image URL
+      readonlyRootFilesystem = false
+      cpu                    = 512
+      memory                 = 1024
+      essential              = true
+
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = "/ecs/hello-world"
+          awslogs-stream-prefix = "ecs"
+          awslogs-region        = "eu-west-1"
+          awslogs-create-group  = "true"
+        }
+      }
+    }
+  ])
 
   runtime_platform {
     operating_system_family = "LINUX"
